@@ -8,12 +8,17 @@ const PORT = process.env.PORT || 5000;
 
 // Enhanced CORS configuration
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://your-expo-app-domain.com', 'exp://your-expo-local-address']
-    : ['http://localhost:8081', 'http://192.168.1.5:8081', 'exp://192.168.1.5:8081'],
+  origin:
+    process.env.NODE_ENV === 'production'
+      ? ['https://keepup.app', 'exp://192.168.1.5:8081']
+      : [
+          'http://localhost:8081',
+          'http://192.168.1.5:8081',
+          'exp://192.168.1.5:8081',
+        ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token'],
-  credentials: true
+  credentials: true,
 };
 
 // Middleware
@@ -21,9 +26,10 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI)
+mongoose
+  .connect(process.env.MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('MongoDB connection error:', err));
+  .catch((err) => console.error('MongoDB connection error:', err));
 
 // Routes
 app.get('/', (req, res) => {
