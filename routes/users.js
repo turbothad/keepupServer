@@ -24,7 +24,8 @@ router.post('/register', async (req, res) => {
 
     // Create token
     // eslint-disable-next-line no-underscore-dangle
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    const jwtSecret = process.env.JWT_SECRET || 'defaultdevelopmentsecretkey';
+    const token = jwt.sign({ id: user._id }, jwtSecret, {
       expiresIn: '1d',
     });
 
@@ -59,11 +60,12 @@ router.post('/login', async (req, res) => {
 
     // Create token
     // eslint-disable-next-line no-underscore-dangle
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    const jwtSecret = process.env.JWT_SECRET || 'defaultdevelopmentsecretkey';
+    const token = jwt.sign({ id: user._id }, jwtSecret, {
       expiresIn: '1d',
     });
 
-    res.json({
+    return res.json({
       token,
       user: {
         // eslint-disable-next-line no-underscore-dangle
@@ -73,9 +75,9 @@ router.post('/login', async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.log('Login error:', err);
+    return res.status(500).json({ message: err.message });
   }
-  return res.status(200).json({ message: 'User logged in' });
 });
 
 // Get user profile
